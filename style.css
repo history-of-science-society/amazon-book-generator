@@ -1,0 +1,99 @@
+/* Isis BRL - Front Page Styles*/
+.ama-fp-container {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    align-content: center;
+    flex-flow: row wrap;
+}
+
+.ama-fp-item {
+    width: 165.5px;
+    height: 250px;
+    margin: .5em;
+    flex: 0 1 auto;
+    align-content: center;
+}
+
+.ama-fp-link {
+    display: flex;
+    width: 100%;
+    height: 100%;
+    text-decoration: none;
+    border: none;
+
+}
+
+.ama-fp-image {
+    width: 100%;
+    height: auto;
+}
+
+
+/*Amazon Body Styles - Includes Author, Title, and other information */
+.ama-body-container {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    align-content: center;
+    flex-flow: row wrap;
+}
+
+.ama-body-item {
+    width: 250px;
+    -webkit-transition: all .2s ease-in-out;
+    -o-transition: all .2s ease-in-out;
+    transition: all .2s ease-in-out;
+
+    flex: 0 1 auto;
+    margin: 1em;
+    display: flex;
+    flex-flow: row wrap;
+
+    box-shadow: .15em .15em 1em rgba(0, 0, 0, .12);
+    border: solid 1px #eee;
+}
+
+.ama-body-item:hover {
+    -webkit-transform: scale(1.1);
+    -ms-transform: scale(1.1);
+    transform: scale(1.1);
+}
+
+.ama-body-link {
+    text-decoration: none;
+    border: none;
+    color: black;
+}
+
+.ama-body-link-2 {
+    display: flex;
+    flex-flow: column;
+    text-align: left;
+    font-family: sans-serif;
+    padding: .5em 1.4em 2em;
+}
+
+.ama-body-link h2 {
+    margin: 25px 10px 15px;
+    color: #222;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+}
+
+.ama-body-image {
+    display: block;
+    height: auto;
+    width: 100%;
+}
+
+.ama-title {
+    margin: 10px;
+    font-style: italic;
+}
+
+.ama-pub {
+    margin: 10px;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+    font-size: 75%;
+    text-align: right;
+}
