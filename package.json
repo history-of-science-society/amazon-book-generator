@@ -6,7 +6,7 @@
   "dependencies": {
     "aws-lib": "^0.3.0",
     "piranhax": "^1.0.9",
-    "prompt": "^1.0.0",
+    "prompts": "^2.2.1",
     "requirejs": "^2.3.6"
   },
   "devDependencies": {

@@ -1,35 +1,50 @@
 const fs = require("fs");
 const Piranhax = require("piranhax");
 require('dotenv').config();
+const prompts = require('prompts');
 
-// Prompt
-const prompt = require('prompt');
 
+
+//Text variables
 const amazonFirst = "<!DOCTYPE html><html><head><title>Amazon Front Page</title><link rel='stylesheet' href='style.css'></head><body><p style='text-align: center;'><a href='https://hssonline.org/resources/isis-books-received/'>Previous <em>Isis</em> Books Received Lists</a></p><h3 style='text-align: center;'><strong>Click the book to learn more</strong></h3><div class='ama-body-container'>";
 
-//Complete file with closing tags and affiliate warning
 const amazonLast = "</div><em>By arrangement with Amazon.com, Web users can benefit the Society while purchasing titles currently listed in the Amazon catalog. Each book (or any other kind of merchandise) bought from Amazon using an HSS link or the HSS search box will earn the Society up to 5% of the purchase price. We offer this opportunity as a service to our many Web users, and to help support the costs of our growing Web presence.</em></body></html>";
 
+// (Over)write the initial files
 fs.writeFile("index.html", amazonFirst, function (err, amazonFirst) {
     if (err) console.log(err);
-    console.log("Created the HTML file and entered initial information...");
 });
 
-// Enter raw list of ISBNs
-let rawList = "Maimonides On the Regimen of Health,Maimonides On the Regimen of Health";
-
-// Split ISBNs into a new array
-const amaISBN = (/,/.test(rawList)) ? rawList.split(',') : rawList;
-console.log(amaISBN)
 // Enter Amazon Associate Information
 const client = new Piranhax(process.env.AMAZON_ACCESS, process.env.AMAZON_SECRET, "historyofscie-20");
 
 // Define errors
 let bookErrors = [];
 
+async function getBooks(cb) {
+    const response = await prompts({
+        type: 'list',
+        name: 'books',
+        message: 'Please list book titles or ISBNs, separated by a semi-colon (;)',
+        separator: ';',
+    })
+
+    // Destructure
+    const {books} = response;
+
+    books.forEach( (x, i) => {
+        books[i] = x.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g,"");
+    });
+
+
+    cb(books);
+
+}
+
+getBooks(amaLoop);
 
 // To loop through ISBNs and get info from Amazon via ItemSearch
-function amaLoop(amaISBN, callback) {
+function amaLoop(amaISBN) {
 
     for (let i = 0; i < amaISBN.length; i++) {
         (function (i) {
@@ -45,14 +60,14 @@ function amaLoop(amaISBN, callback) {
 
 
                     // Define info
-                    let url = await results.get("Item.DetailPageURL");
-                    let image = await results.get("Item.LargeImage.URL");
-                    let title = await results.get("Item.ItemAttributes.Title");
+                    let url = results.get("Item.DetailPageURL");
+                    let image = results.get("Item.LargeImage.URL");
+                    let title = results.get("Item.ItemAttributes.Title");
                     let titleIndex = " ' " + title + " ' ";
-                    let author = await results.get("Item.ItemAttributes.Author");
-                    let publisher = await results.get("Item.ItemAttributes.Publisher");
-                    let pubDate = await results.get("Item.ItemAttributes.PublicationDate");
-                    let isbn = await results.get("Item.ItemAttributes.ISBN");
+                    let author = results.get("Item.ItemAttributes.Author");
+                    let publisher = results.get("Item.ItemAttributes.Publisher");
+                    let pubDate = results.get("Item.ItemAttributes.PublicationDate");
+                    let isbn = results.get("Item.ItemAttributes.ISBN");
                     let pages = results.get("Item.ItemAttributes.NumberOfPages");
 
                     if (author === undefined) {
@@ -84,12 +99,12 @@ function amaLoop(amaISBN, callback) {
                         console.log("Writing HTML for: " + title + " | ISBN: " + isbn + " | " + (i + 1) + " of " + amaISBN.length);
                     });
 
-                    fs.appendFile("member news.txt", memberNewsText, function (err, amazonBody) {
+                    fs.writeFile("member news.txt", memberNewsText, function (err, amazonBody) {
                         if (err) console.log(err);
                     });
 
                     if (i == (amaISBN.length - 1)) {
-                        callback();
+                        finishIt();
                     }
 
                 }).catch(err => {
@@ -113,4 +128,4 @@ function finishIt() {
 
 
 
-amaLoop(amaISBN, finishIt);
+// amaLoop(amaISBN, finishIt);
